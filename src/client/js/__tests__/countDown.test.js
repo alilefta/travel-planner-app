@@ -10,9 +10,9 @@ describe("Count down from a specifed date into current date", ()=> {
 
             if (distance < 0) {
                 clearInterval(x);
-                return expect(days).toBeLessThan(0);
+                expect(days).toBeLessThan(0);
             }else{
-                return expect(days).toBeGreaterThan(0);
+                expect(days).toBeGreaterThan(0);
 
             }
         }, 1000);

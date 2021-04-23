@@ -3,7 +3,10 @@ import{geoNamesApi} from './geoNamesAPI';
 
 const handleSubmit = () => {
     const tripsForm = document.querySelector("#trips-form");
-    const info = [];
+    let primaryInfo = [];
+    // if(info){
+    //     localStorage.setItem('info', JSON.stringify(info))
+    // }
     if(tripsForm){
         tripsForm.addEventListener("submit", (e)=> {
             e.preventDefault();
@@ -12,21 +15,22 @@ const handleSubmit = () => {
             const date = document.querySelector("#trips-form-date");
 
             if(destination.value !== "" && date.value !== ""){
-                info.push({destination: destination.value, date: date.value});
+                primaryInfo.push({destination: destination.value, date: date.value});
                 destination.value = '';
                 date.value = '';
+
             }
             // return info;
         })
-        return info
     }
     
 }
 
 
 
+
 document.addEventListener('DOMContentLoaded', ()=> {
-    console.log(handleSubmit());
+    handleSubmit();
 });
 
 export{
