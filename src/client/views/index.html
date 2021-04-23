@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaggora - Travel PLanner</title>
+</head>
+<body>
+    <div class="app">
+        <nav>
+            <div class="logo"><a href="#">Zaggora</a></div>
+        </nav>
+        <main>
+            <section class="hero">
+                <div class="hero--container">
+                    <!-- <img src="" alt=""> -->
+                    <h1>Zaggora's Travel Planner</h1>
+                    <p>You can plan your trips with us</p>
+                </div>
+               <section class="content">
+                   <div class="trips-gallery">
+                       <h3>My Trips</h3>
+                       <hr>
+                       <div class="my-trip">
+                           <div class="left-side">
+                               <p class="trip-gallery-heading">Going to: Paris</p>
+                               <p class="trip-gallery-date">Departure date: 22/4/2021</p>
+                               <p>Paris, France trip is about 222 days away</p>
+                               <div class="left-trip-control">
+                                   <button id="save-trip">Save Trip</button>
+                                   <button id="delete-trip">Remove Trip</button>
+                               </div>
+                               <div class="trip-weather">
+                                   <p>Typical weather is: </p>
+                                   <p>High: 30C, Low : 5C</p>
+                                   <p>Mostly Cloudy throughout the day</p>
+                               </div>
+   
+                           </div>
+                           <div class="right-side">
+                               <img id="my-trip-img" src="https://cdn.pixabay.com/photo/2015/07/13/14/40/paris-843229_1280.jpg" alt="">
+                               <div class="right-trip-control">
+                                   <button id="add-lodging-info">Add lodging info</button>
+                                   <button id="add-packing-info">Add packing info</button>
+                                   <button id="add-notes">Add notes</button>
+                               
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div id="trips">
+                       <p class="heading">Set a trip </p>
+                       <form action="#" id="trips-form">
+                           <label for="city">
+                               <input id="trips-form-destination" type="text" placeholder="Enter a city" required>
+                               Where to go:
+                           </label>
+                           <label for="departure-date">
+                               <input id="trips-form-date" type="date" required>
+                               Departure:
+                           </label>
+                           <button role="submit" type="submit" id="trips-form-btn">Go</button>
+                       </form>
+                   </div>
+
+               </section>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
