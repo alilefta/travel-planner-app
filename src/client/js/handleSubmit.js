@@ -1,12 +1,9 @@
-import {countDown} from './countDownDate';
-import{geoNamesApi} from './geoNamesAPI';
-
+import {fetchAllAPs} from './fetchAPIs'
+import{storeData} from './dataHandle';
 const handleSubmit = () => {
     const tripsForm = document.querySelector("#trips-form");
-    let primaryInfo = [];
-    // if(info){
-    //     localStorage.setItem('info', JSON.stringify(info))
-    // }
+    let allTrips = [];
+
     if(tripsForm){
         tripsForm.addEventListener("submit", (e)=> {
             e.preventDefault();
@@ -15,12 +12,15 @@ const handleSubmit = () => {
             const date = document.querySelector("#trips-form-date");
 
             if(destination.value !== "" && date.value !== ""){
-                primaryInfo.push({destination: destination.value, date: date.value});
+                fetchAllAPs(destination.value, date.value).then(data => {
+                    allTrips.push(data);
+                })
                 destination.value = '';
                 date.value = '';
 
+                storeData(allTrips)
+                
             }
-            // return info;
         })
     }
     

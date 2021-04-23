@@ -1,4 +1,4 @@
-import {weatherFuncAuth, weatherApi, weatherAPIcall} from './../weatherBitAPI';
+import {weatherFuncAuth, weatherApi, weatherAPIcall} from './../fetchAPIs';
 const fetch = require('node-fetch');
 
 

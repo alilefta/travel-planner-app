@@ -1,4 +1,4 @@
-import {geoNamesApi} from './../geoNamesAPI';
+import {geoNamesApi} from './../fetchAPIs';
 const fetch = require('node-fetch');
 
 describe("Geo names API to get Longitude, Latitude, Country", () => {
