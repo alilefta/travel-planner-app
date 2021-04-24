@@ -1,4 +1,4 @@
-import {countDown} from "./../countDownDate";
+import {countDown} from "./../dataHandle";
 
 describe("Count down from a specifed date into current date", ()=> {
     it("Check if it works normally on 2023-05-03", () => {

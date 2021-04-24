@@ -1,17 +1,24 @@
-import {storeData} from './dataHandle'
 const fetch = require('node-fetch');
+
+
+let errorMessage = '';
 const geoNamesApi = async (city) => {
     const response = await fetch(`http://api.geonames.org/searchJSON?formatted=true&q=${city}&maxRows=5&lang=es&username=alilefta`).then(res=>{
         if(res.ok == true){
             return res.json();
         }
     }).then(data => {
-        const result = data.geonames[0];
-        return {longitude: result.lng,
-                latitude: result.lat,
-                countryName: result.countryName,
-                countryCode: result.countryCode
-            }
+        if(data.geonames.length > 0){
+            const result = data.geonames[0];
+            return {longitude: result.lng,
+                    latitude: result.lat,
+                    countryName: result.countryName,
+                    countryCode: result.countryCode
+                }
+        }else{
+            errorMessage = "No city, country";
+            return null;
+        }
 
     }).catch(err => {
         throw new Error("Error: "+ err);
@@ -21,7 +28,7 @@ const geoNamesApi = async (city) => {
 }
 
 const weatherFuncAuth = async () => {
-    const response = fetch("http://localhost:8081/getWeatherKey").then(res=> {
+    const response = await fetch("http://localhost:8081/getWeatherKey").then(res=> {
         if(res.ok == true){
             return res.json();
         }else{
@@ -37,7 +44,7 @@ const weatherFuncAuth = async () => {
 
 
 const weatherApi = async (longitude, latitude, key) => {
-    const response = fetch(`https://api.weatherbit.io/v2.0/forecast/daily?&lat=${latitude}&lon=${longitude}&key=${key}&units=M&days=7`).then(data => {
+    const response = await fetch(`https://api.weatherbit.io/v2.0/forecast/daily?&lat=${latitude}&lon=${longitude}&key=${key}&units=M&days=7`).then(data => {
         if(data.ok == true){
             return data.json();
         }else{
@@ -77,7 +84,18 @@ const pixabayAPICall = async (query) => {
         }else{
             throw new Error("There is internal server Error");
         }
-    }).then(data => data)
+    }).then(data => {
+        if(data.hits.length !== 0){
+            return data;
+        }else{
+            errorMessage = "No Image";
+            return {
+                hits: [
+                    {largeImageURL: "https://cdn.pixabay.com/photo/2017/06/08/17/32/not-found-2384304_1280.jpg"}
+                ]
+            }
+        }
+    })
     .catch(err => {
         throw new Error(err);
     })
@@ -86,22 +104,34 @@ const pixabayAPICall = async (query) => {
 
 const fetchAllAPs = async (dest, date)=> {
     const trip = {
+        id: new Date().getTime().toString(),
         destination: dest,
         date: date
     };
-
-    geoNamesApi(dest).then(locationInfo => {
-        trip["location"] = locationInfo
-        weatherAPIcall(locationInfo.longitude, locationInfo.latitude).then(weatherInfo => {
-            trip["weather"] = weatherInfo;
-            pixabayAPICall(dest).then(imageInfo => {
-                trip["images"] = imageInfo;
+    let isNull = false;
+    await geoNamesApi(dest).then(async locationInfo => {
+        if(locationInfo === null){
+            isNull = true;
+            // return null;
+        }else{
+            trip["location"] = await locationInfo
+            await weatherAPIcall(locationInfo.longitude, locationInfo.latitude).then(async (weatherInfo) => {
+                trip["weather"] = await weatherInfo;
+                await pixabayAPICall(dest).then(async imageInfo => {
+                    trip["images"] = await imageInfo;
+                })
             })
-        })
+        }
 
         
+    }).catch(err => {
+        throw new Error(err)
     })
+    if(isNull == true){
+        return null;
+    }
     return trip;
+
 
 }
 

@@ -1,67 +1,117 @@
+let storage = [];
+
+const storeUserData = (data) => {
+    console.log(data)
+}
+
 const countDown = (date) => {
     let countDownDate = new Date(date).getTime();
-
-    let x = setInterval(function() {
     let now = new Date().getTime();
     let distance = countDownDate - now;
     let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-    // document.getElementById("demo").innerHTML = days + "d ";
-
-    // If the count down is finished, write some text
     if (distance < 0) {
-        clearInterval(x);
-        // document.getElementById("demo").innerHTML = "You passed the date";
-        return " You missed the date!!! ";
+        return 0;
     }else{
         return days;
-
     }
-    }, 1000);
 }
 
-const updateUI = (trips) => {
+const checkweather = (weather, date) => {
+    if(countDown(date) <= 7){
+        let x = `<div class="trip-weather">
+                    <p>Trip weather is out of reach</p>
+                </div>`;
+        weather.data.map(e => {
+            if(date == e.datetime){
+                return x = `<div class="trip-weather">
+                    <p>Typical weather is: </p>
+                    <p>High: ${e.app_max_temp}°C, Low : ${e.app_min_temp}°C</p>
+                    <p>${e.weather.description}</p>
+                </div>`;
+            }
+        })
+        return x
+    }else{
+        return `<div class="trip-weather"><p>Trip weather is out of reach</p></div>`;
+    }
+}
+
+const handleTripControl = (trip, idTrip) => {
+    let saveBTN = document.querySelectorAll("#save-trip");
+    // let notesBTN = document.querySelectorAll('#add-notes');
+
+    if(saveBTN){
+        saveBTN.forEach((btn) => {
+            btn.addEventListener('click', _ => {
+                // console.log(!storage.some(e=> e.id == idTrip))
+                if(!storage.some(e=> e.id == idTrip)){
+                    return storage.push(trip);
+                }
+                storeUserData(storage);
+                return storage;
+            })
+        });
+        // notesBTN.forEach(btn => {
+        //     // Need notes input (text area) to appended to the current trip
+
+        // })
+
+    }
+    
+    
+}
+
+const updateUI = async (trips) => {
     const tripContainer = document.querySelector('.trips-gallery');
+    
     console.log(trips)
-    if(trips){
+
+    if(document.querySelector('.my-trip')){
+        document.querySelectorAll('.my-trip').forEach(e => e.remove());
+    }
+
+    if(trips !== null){
         trips.map(trip => {
+            let countdownDate = countDown(trip.date);
             const div = document.createElement('div');
             div.classList.add("my-trip");
             div.innerHTML = `
                 <div class="left-side">
                     <p class="trip-gallery-heading">Going to: ${trip.destination}</p>
                     <p class="trip-gallery-date">Departure date: ${trip.date}</p>
-                    <p>${trip.destination}, ${trip.location.countryName} trip is about <span class="trip-date-countDown>${countDown(trip.date)}</span> days away</p>
+                    <p>${trip.destination}, ${trip.location.countryName} trip is about ${countdownDate} days away</p>
                     <div class="left-trip-control">
                         <button id="save-trip">Save Trip</button>
                         <button id="delete-trip">Remove Trip</button>
                     </div>
-                    <div class="trip-weather">
-                        <p>Typical weather is: </p>
-                        <p>High: 30C, Low : 5C</p>
-                        <p>Mostly Cloudy throughout the day</p>
-                    </div>
-        
+                    ${checkweather(trip.weather, trip.date)}
                 </div>
                 <div class="right-side">
-                    <img id="my-trip-img" src="https://cdn.pixabay.com/photo/2015/07/13/14/40/paris-843229_1280.jpg" alt="">
+                    <img id="my-trip-img" src="${trip.images.hits[0].largeImageURL}" alt="${trip.destination}">
                     <div class="right-trip-control">
                         <button id="add-lodging-info">Add lodging info</button>
                         <button id="add-packing-info">Add packing info</button>
                         <button id="add-notes">Add notes</button>
-                    
                     </div>
                 </div>`;
+            tripContainer.appendChild(div);
+
+            handleTripControl(trip, trip.id);
         })
+
+    }else{
+        const noTripElement = document.createElement('div');
+        noTripElement.classList.add('no-trip-info')
+
+        noTripElement.innerText = "Sorry, No trips found";
+        tripContainer.appendChild(noTripElement);
     }
 
 }
 
 
-const storeData = async (data) => {
-    updateUI(data)
-}
+
 
 export {
-    storeData
+    updateUI, countDown
 }
