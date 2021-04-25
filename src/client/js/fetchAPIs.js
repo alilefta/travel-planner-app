@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 
 
-let errorMessage = '';
 const geoNamesApi = async (city) => {
     const response = await fetch(`http://api.geonames.org/searchJSON?formatted=true&q=${city}&maxRows=5&lang=es&username=alilefta`).then(res=>{
         if(res.ok == true){
@@ -16,7 +15,6 @@ const geoNamesApi = async (city) => {
                     countryCode: result.countryCode
                 }
         }else{
-            errorMessage = "No city, country";
             return null;
         }
 
@@ -88,7 +86,6 @@ const pixabayAPICall = async (query) => {
         if(data.hits.length !== 0){
             return data;
         }else{
-            errorMessage = "No Image";
             return {
                 hits: [
                     {largeImageURL: "https://cdn.pixabay.com/photo/2017/06/08/17/32/not-found-2384304_1280.jpg"}

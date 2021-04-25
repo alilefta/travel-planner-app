@@ -1,11 +1,10 @@
 import {fetchAllAPs} from './fetchAPIs'
-import{updateUI} from './dataHandle';
+import{searchedTripsData} from './dataHandle';
 
-let allTrips = [];
+let searchedTrips = [];
 
-const storeData = () => {
-    // return updateUI(data)
-}
+// I reached to sending data from handlesubmit to dataHandle, and moved updateUI
+
 const handleSubmit = () => {
     const tripsForm = document.querySelector("#trips-form");
 
@@ -19,21 +18,21 @@ const handleSubmit = () => {
             if(destination.value !== "" && date.value !== ""){
                 fetchAllAPs(destination.value, date.value).then(async data => {
                     if(data !== null){
-                        allTrips.push(data);
-                        return allTrips
+                        searchedTrips.push(data);
+                        return searchedTrips;
                     }else{
                         return null;
                     }
-                }).then(d => updateUI(d)).catch(err => {
+                }).then(d => {
+                    // updateUI(d)
+                    searchedTripsData(d);
+                    
+                }).catch(err => {
                     alert("Invalid query", err)
                 })
 
                 destination.value = '';
                 date.value = '';
-
-                storeData(allTrips)
-                // updateUI(allTrips);
-                
             }
         })
     }
