@@ -1,9 +1,36 @@
 let storage = [];
 
+const modal = (msg) => {
+    const modal = document.querySelector("#modal");
+    const messageEl = document.querySelector(".modal--message");
+   
+    messageEl.innerText = msg;
+
+    modal.classList.add("modal--show")
+
+    setTimeout(()=> {
+        if(!modal.classList.contains("modal--show")){
+            modal.classList.add("modal--show");
+
+        }else{
+            modal.classList.remove("modal--show");
+        }
+    }, 2000);
+} 
+
+
+window.addEventListener('DOMContentLoaded', ()=> {
+    setTimeout(()=> {
+        console.log(storage)
+    }, 3000)
+})
+
+
 const searchedTripsData = (data) => {
     storage = [...data];
-    console.log(storage)
-    updateUI(data);
+    // console.log(storage)
+    updateUI(storage);
+    return storage;
 }
 const getTripsList = () => {
     let tripsList;
@@ -17,24 +44,26 @@ const getTripsList = () => {
 
 
 const removeTrip = (id) => {
+    // console.log(storage)
+
     let trips = getTripsList();
 
     trips = trips.filter(trip => {
         if(trip.id !== id){
-            return trip
+            return trip;
         }
     });
     
-    localStorage.setItem('trips-app-planner', JSON.stringify(trips))
-}
-
-const removeTripFromStorage = (id) => {
-    // console.log(storage)
-    return storage = storage.filter(e => {
-        if(e.id === id){
+    localStorage.setItem('trips-app-planner', JSON.stringify(trips));
+    storage = storage.filter(e => {
+        if(e.id !== id){
             return e;
         }
-    })
+    });
+    modal("Trip is removed");
+    searchedTripsData(storage);
+    
+    return storage;
 }
 
 const saveTrip = (trip) => {
@@ -48,11 +77,19 @@ const saveTrip = (trip) => {
         let check = JSON.parse(localStorage.getItem('trips-app-planner'));
 
         if(check.every(e => e.id !== trip.id)){
-
-            str.push(trip)
+            
+            str.push(trip);
+            modal("Trip is saved");
+        }else{
+            modal("Trip is already saved");
         }
     }
     localStorage.setItem("trips-app-planner", JSON.stringify(str));
+
+
+    // Check if it saves
+    // checkIfTripSaved(trip);
+
 }
 
 
@@ -120,7 +157,6 @@ const handleTripControl = (trip) => {
                 let dataID = e.target.parentNode.parentNode.parentNode.dataset.id;
                 if(dataID === trip.id){
                     removeTrip(trip.id);
-                    removeTripFromStorage(trip.id);
                 }
             })
         })
@@ -137,7 +173,7 @@ const updateUI = async (trips) => {
         document.querySelectorAll('.my-trip').forEach(e => e.remove());
     }
 
-    if(trips !== null){
+    if(trips.length !== 0){
         trips.map(trip => {
             let countdownDate = countDown(trip.date);
             const div = document.createElement('div');
@@ -171,7 +207,9 @@ const updateUI = async (trips) => {
             handleTripControl(trip, trip.id);
         })
 
-    }else{
+    }
+    
+    else{
         const noTripElement = document.createElement('div');
         noTripElement.classList.add('no-trip-info')
 
@@ -183,16 +221,15 @@ const updateUI = async (trips) => {
 
 
 document.addEventListener("DOMContentLoaded", ()=> {
-    let savedTripsInStorage = getTripsList();
+    let storageSavedItems = getTripsList();
     
-    storage = [...savedTripsInStorage];
+    storage = [...storageSavedItems];
     if(storage.length === 0){
-        storage = null;
+        storage = [];
     }
-    // console.log(storage)
     updateUI(storage);
 })
 
 export {
-    updateUI, countDown, getTripsList, searchedTripsData
+    storage, updateUI, countDown, getTripsList, searchedTripsData
 }
