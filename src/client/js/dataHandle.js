@@ -1,29 +1,31 @@
 let storage = [];
 
-const modal = (msg) => {
+const modal = (msg, type = 'success') => {
     const modal = document.querySelector("#modal");
     const messageEl = document.querySelector(".modal--message");
    
     messageEl.innerText = msg;
-
     modal.classList.add("modal--show")
+    
+    if(type === 'danger'){
+        modal.style.backgroundColor = "#d93d3d";
+    }else if(type === 'warning'){
+       modal.style.backgroundColor = "#d5c42b"
+    }
+    else{
+        modal.style.backgroundColor = "#30ae65";
+    }
 
     setTimeout(()=> {
-        if(!modal.classList.contains("modal--show")){
-            modal.classList.add("modal--show");
-
-        }else{
+        if(modal.classList.contains("modal--show")){
             modal.classList.remove("modal--show");
+
         }
-    }, 2000);
+    }, 3000);
 } 
 
 
-window.addEventListener('DOMContentLoaded', ()=> {
-    setTimeout(()=> {
-        console.log(storage)
-    }, 3000)
-})
+
 
 
 const searchedTripsData = (data) => {
@@ -44,8 +46,6 @@ const getTripsList = () => {
 
 
 const removeTrip = (id) => {
-    // console.log(storage)
-
     let trips = getTripsList();
 
     trips = trips.filter(trip => {
@@ -60,7 +60,7 @@ const removeTrip = (id) => {
             return e;
         }
     });
-    modal("Trip is removed");
+    modal("Trip is removed", 'success');
     searchedTripsData(storage);
     
     return storage;
@@ -79,9 +79,9 @@ const saveTrip = (trip) => {
         if(check.every(e => e.id !== trip.id)){
             
             str.push(trip);
-            modal("Trip is saved");
+            modal("Trip is saved", 'success');
         }else{
-            modal("Trip is already saved");
+            modal("Trip is already saved", 'warning');
         }
     }
     localStorage.setItem("trips-app-planner", JSON.stringify(str));
@@ -128,15 +128,11 @@ const checkweather = (weather, date) => {
 const handleTripControl = (trip) => {
     let saveBTN = document.querySelectorAll("#save-trip");
     let removeBTN = document.querySelectorAll("#delete-trip");
-    // let notesBTN = document.querySelectorAll('#add-notes');
+    let notesBTN = document.querySelectorAll('#add-notes');
 
     if(saveBTN){
         saveBTN.forEach((btn) => {
             btn.addEventListener('click', (e)=> {
-                // console.log(!storage.some(e=> e.id == idTrip))
-                // if(!storage.some(e=> e.id == idTrip)){
-                //     return storage.push(trip);
-                // }
                 let dataID = e.target.parentNode.parentNode.parentNode.dataset.id;
                 if(dataID === trip.id){
                     storage.push(trip)
@@ -166,12 +162,27 @@ const handleTripControl = (trip) => {
 
 const updateUI = async (trips) => {
     const tripContainer = document.querySelector('.trips-gallery');
-    
-    console.log(trips)
+
 
     if(document.querySelector('.my-trip')){
         document.querySelectorAll('.my-trip').forEach(e => e.remove());
     }
+    if(document.querySelector('.trips-gallery h3')){
+        document.querySelector('.trips-gallery h3').remove();
+    }
+    if(document.querySelector('.trips-gallery hr')){
+        document.querySelector('.trips-gallery hr').remove();
+    }
+
+
+    const h3 = document.createElement("h3");
+    const hr = document.createElement("hr");
+
+    h3.innerText = "My Trips";
+
+    tripContainer.appendChild(h3);
+    tripContainer.appendChild(hr);
+
 
     if(trips.length !== 0){
         trips.map(trip => {
@@ -188,28 +199,35 @@ const updateUI = async (trips) => {
                     <p class="trip-gallery-heading">Going to: ${trip.destination}</p>
                     <p class="trip-gallery-date">Departure date: ${trip.date}</p>
                     <p>${trip.destination}, ${trip.location.countryName} trip is about ${countdownDate} days away</p>
-                    <div class="left-trip-control">
-                        <button id="save-trip">Save Trip</button>
-                        <button id="delete-trip">Remove Trip</button>
-                    </div>
                     ${checkweather(trip.weather, trip.date)}
+                    <div class="trip-notes">
+                        <p class="trip-notes-heading">Notes: </p>
+                        <div class="trip-notes-content">
+                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhgfvrnrugui4rbfbvrfueiu</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="right-side">
                     <img id="my-trip-img" src="${trip.images.hits[0].largeImageURL}" alt="${trip.destination}">
                     <div class="right-trip-control">
-                        <button id="add-lodging-info">Add lodging info</button>
-                        <button id="add-packing-info">Add packing info</button>
                         <button id="add-notes">Add notes</button>
+                        <button id="save-trip">Save Trip</button>
+                        <button id="delete-trip">Remove Trip</button>
                     </div>
                 </div>`;
             tripContainer.appendChild(div);
 
-            handleTripControl(trip, trip.id);
+            handleTripControl(trip, trip.id); //Run Buttons => save, remove, add notes
         })
 
     }
     
     else{
+        const isTripFound = document.querySelector('.no-trip-info');
+
+        if(isTripFound){
+            isTripFound.remove();
+        }
         const noTripElement = document.createElement('div');
         noTripElement.classList.add('no-trip-info')
 
@@ -220,6 +238,38 @@ const updateUI = async (trips) => {
 }
 
 
+// User Trips Menu
+const userTrips = () => {
+    console.log("User menu works");
+    let myTrips = getTripsList(); // Either [] or [{...}, {...}]
+    document.querySelector("#trips-search").style.display = "none";
+
+    document.querySelector(".trips-gallery").innerHTML = '';
+    updateUI(myTrips);
+}
+
+document.querySelector(".my-trips-menu").addEventListener('click', _ => {
+    _.preventDefault();
+    userTrips();
+
+    
+});
+
+
+const mainPage = () => {
+    let trips = storage;
+    console.log(trips)
+    updateUI(trips);
+    document.querySelector("#trips-search").style.display = "flex";
+}
+
+document.querySelector(".main-menu").addEventListener('click', _ => {
+    _.preventDefault();
+    mainPage();
+});
+
+
+
 document.addEventListener("DOMContentLoaded", ()=> {
     let storageSavedItems = getTripsList();
     
@@ -227,9 +277,9 @@ document.addEventListener("DOMContentLoaded", ()=> {
     if(storage.length === 0){
         storage = [];
     }
-    updateUI(storage);
-})
+    // updateUI(storage);
+});
 
 export {
-    storage, updateUI, countDown, getTripsList, searchedTripsData
+    storage, updateUI, countDown, getTripsList, searchedTripsData, modal
 }

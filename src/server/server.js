@@ -27,6 +27,8 @@ app.get('/getPixabayKey', (req, res)=> {
     res.json({"key": process.env.PIXABAY_API_KEY});
 });
 
+
+
 const port = 8081;
 
 app.listen(port, ()=> {

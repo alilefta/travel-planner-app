@@ -19,8 +19,9 @@
 .app nav {
 	height: 70px;
 	display: flex;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: center;
+	justify-items: flex-end;
 }
 .app nav .logo {
 	margin: 0 0 0 1rem;
@@ -33,6 +34,23 @@
 	color: #302d2dbe;
 }
 
+.app nav #user-control {
+	position: relative;
+	margin-right: 2rem;
+	cursor: pointer;
+	a.my-trips-menu,
+	a.main-menu {
+		text-decoration: none;
+		font-size: 1rem;
+		font-family: var(--Poppins);
+		color: #495048bd;
+
+		border: 1px solid rgba(56, 50, 59, 0.741);
+		padding: 0.5rem;
+		border-radius: 4px;
+	}
+}
+
 main {
 	width: 100%;
 	height: auto;
@@ -42,20 +60,20 @@ main {
 	position: relative;
 }
 
-main section.hero .hero--container {
+main .hero--container {
 	width: 100%;
 	color: #f3f3f3;
 	font-family: var(--Roboto);
 }
 
-main section.hero .hero--container h1 {
+main .hero--container h1 {
 	text-align: center;
 	margin-top: 3rem;
 	font-size: 2rem;
 	font-weight: 300;
 }
 
-main section.hero .hero--container p {
+main .hero--container p {
 	text-align: center;
 	font-weight: 300;
 	font-family: var(--Poppins);
@@ -63,7 +81,7 @@ main section.hero .hero--container p {
 	line-height: 2;
 }
 
-#trips {
+#trips-search {
 	/* background-image: linear-gradient(72deg, #2b156fcf, #353e6bad); */
 	background-color: #ea7b7b;
 	display: flex;
@@ -75,7 +93,7 @@ main section.hero .hero--container p {
 	border-radius: 5px;
 }
 
-#trips p.heading {
+#trips-search p.heading {
 	margin: 0.4rem 0 0.1rem 0;
 	font-family: var(--Poppins);
 	color: #f3f3f3;
@@ -83,7 +101,7 @@ main section.hero .hero--container p {
 	font-weight: 300;
 }
 
-#trips #trips-form {
+#trips-search #trips-form {
 	display: flex;
 	width: 80%;
 	flex-direction: column;
@@ -91,7 +109,7 @@ main section.hero .hero--container p {
 	border-radius: 5px;
 }
 
-#trips #trips-form label {
+#trips-search #trips-form label {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -101,7 +119,7 @@ main section.hero .hero--container p {
 	color: #f3f3f3;
 }
 
-#trips #trips-form input {
+#trips-search #trips-form input {
 	padding: 6px 12px;
 	width: 60%;
 	border-radius: 5px;
@@ -110,7 +128,7 @@ main section.hero .hero--container p {
 	font-size: 0.9rem;
 }
 
-#trips #trips-form #trips-form-btn {
+#trips-search #trips-form #trips-form-btn {
 	padding: 0.3rem 1rem;
 	border-radius: 5px;
 	cursor: pointer;
@@ -123,7 +141,7 @@ main section.hero .hero--container p {
 	font-size: 1.1rem;
 }
 
-#trips #trips-form #trips-form-btn:hover {
+#trips-search #trips-form #trips-form-btn:hover {
 	background-color: #243271;
 	color: #fff;
 	transition: 0.1s linear background-color, color;
@@ -266,6 +284,10 @@ hr {
 	font-weight: 400;
 }
 
+.trips-gallery .my-trip .left-side .trip-notes {
+	border: 1px solid rgba(197, 197, 197, 0.4);
+}
+
 // Modal
 #modal {
 	position: sticky;
@@ -278,6 +300,7 @@ hr {
 	max-width: 200px;
 	border-radius: 5px;
 	transition: 0.2s linear opacity;
+	color: #ffffff;
 }
 
 #modal .modal--message {
@@ -319,34 +342,34 @@ hr {
 }
 
 @media screen and (min-width: 1120px) {
-	main section.hero {
+	main {
 		display: flex;
 		flex-direction: column;
 	}
-	main section.hero .hero--container {
+	main .hero--container {
 		margin: 0.5rem 0 2rem 0;
 	}
-	main section.hero .hero--container h1 {
+	main .hero--container h1 {
 		font-size: 2.6rem;
 		font-weight: 400;
 	}
-	main section.hero .hero--container p {
+	main .hero--container p {
 		font-size: 1.3rem;
 	}
-	main section.hero section.content {
+	main section.content {
 		display: flex;
 		justify-content: center;
 		align-items: flex-start;
 	}
 
-	#trips {
+	#trips-search {
 		width: 40%;
 		/* height: 300px; */
 		justify-content: space-evenly;
 		margin: 2rem auto;
 		padding: 2rem 0;
 	}
-	#trips p.heading {
+	#trips-search p.heading {
 		font-size: 1.4rem;
 		font-weight: 700;
 	}

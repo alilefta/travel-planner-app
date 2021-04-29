@@ -1,5 +1,5 @@
 import {fetchAllAPs} from './fetchAPIs'
-import{searchedTripsData, storage} from './dataHandle';
+import{searchedTripsData, storage, modal} from './dataHandle';
 
 const handleSubmit = () => {
     const tripsForm = document.querySelector("#trips-form");
@@ -23,9 +23,9 @@ const handleSubmit = () => {
                 }).then(d => {
                     searchedTripsData(d);
                     
-                }).catch(err => {
-                    alert("Invalid query", err);
-                })
+                }).catch(() => {
+                    modal("Invalid query", 'danger');
+                });
 
                 destination.value = '';
                 date.value = '';

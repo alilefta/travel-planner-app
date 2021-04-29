@@ -25,6 +25,22 @@ const geoNamesApi = async (city) => {
     return response;
 }
 
+
+// const countryInfo = async (countryName) => {
+//     const response = await fetch(`https://restcountries.eu/rest/v2/name/${countryName}`).then(res=>{
+//         if(res.ok == true){
+//             return res.json();
+//         }
+//     }).then(data => {
+//         return data;
+
+//     }).catch(err => {
+//         throw new Error("Error: "+ err);
+//     })
+
+//     return response;
+// }
+
 const weatherFuncAuth = async () => {
     const response = await fetch("http://localhost:8081/getWeatherKey").then(res=> {
         if(res.ok == true){
@@ -109,7 +125,6 @@ const fetchAllAPs = async (dest, date)=> {
     await geoNamesApi(dest).then(async locationInfo => {
         if(locationInfo === null){
             isNull = true;
-            // return null;
         }else{
             trip["location"] = await locationInfo
             await weatherAPIcall(locationInfo.longitude, locationInfo.latitude).then(async (weatherInfo) => {
@@ -128,9 +143,8 @@ const fetchAllAPs = async (dest, date)=> {
         return null;
     }
     return trip;
-
-
 }
+
 
 export {
     weatherFuncAuth, weatherApi, weatherAPIcall, pixabayAPICall, geoNamesApi, fetchAllAPs
