@@ -1,11 +1,11 @@
 let storage = [];
 
 const modal = (msg, type = 'success') => {
-    const modal = document.querySelector("#modal");
-    const messageEl = document.querySelector(".modal--message");
+    const modal = document.querySelector("#modalNotify");
+    const messageEl = document.querySelector(".modalNotify--message");
    
     messageEl.innerText = msg;
-    modal.classList.add("modal--show")
+    modal.classList.add("modalNotify--show")
     
     if(type === 'danger'){
         modal.style.backgroundColor = "#d93d3d";
@@ -17,16 +17,12 @@ const modal = (msg, type = 'success') => {
     }
 
     setTimeout(()=> {
-        if(modal.classList.contains("modal--show")){
-            modal.classList.remove("modal--show");
+        if(modal.classList.contains("modalNotify--show")){
+            modal.classList.remove("modalNotify--show");
 
         }
     }, 3000);
 } 
-
-
-
-
 
 const searchedTripsData = (data) => {
     storage = [...data];
@@ -86,10 +82,6 @@ const saveTrip = (trip) => {
     }
     localStorage.setItem("trips-app-planner", JSON.stringify(str));
 
-
-    // Check if it saves
-    // checkIfTripSaved(trip);
-
 }
 
 
@@ -113,7 +105,7 @@ const checkweather = (weather, date) => {
         weather.data.map(e => {
             if(date == e.datetime){
                 return x = `<div class="trip-weather">
-                    <p>Typical weather is: </p>
+                    <p>Typical weather will be: </p>
                     <p>High: ${e.app_max_temp}°C, Low : ${e.app_min_temp}°C</p>
                     <p>${e.weather.description}</p>
                 </div>`;
@@ -125,10 +117,66 @@ const checkweather = (weather, date) => {
     }
 }
 
+const searchAndAddNote = (note, id) => {
+    // const trips = getTripsList();
+
+    // trips.map(e => {
+    //     if(e.id === id){
+    //         e["note"] = note;
+    //     }
+    // })
+
+    // console.log(trips)
+}
+const modalForNotes =(dataId) => {
+    const trip = document.querySelector(`[data-id='${dataId}']`);
+    const notesContainer = trip.querySelector('.trip-notes');
+
+    console.log(trip)
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content ">
+                <div class="modal-header ">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Write a note</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="notes-form">
+                        <div class="form-group " >
+                            <textarea class="form-control notes-text-input" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary userNotesBtn"  data-dismiss="modal">Add Note</button>
+                </div>
+            </div>
+        </div>
+    </div>`
+    notesContainer.appendChild(div);
+
+    const btn = trip.querySelector(".userNotesBtn");
+
+    btn.addEventListener('click', () => {
+        const txt = trip.querySelector('.notes-text-input');
+
+        searchAndAddNote(txt.value, dataId);
+        
+        txt.value = '';
+        return txt.value
+    })
+}
+
 const handleTripControl = (trip) => {
     let saveBTN = document.querySelectorAll("#save-trip");
     let removeBTN = document.querySelectorAll("#delete-trip");
     let notesBTN = document.querySelectorAll('#add-notes');
+
 
     if(saveBTN){
         saveBTN.forEach((btn) => {
@@ -143,10 +191,18 @@ const handleTripControl = (trip) => {
             })
         });
     }
-    // notesBTN.forEach(btn => {
-    //     // Need notes input (text area) to appended to the current trip
 
-    // })
+    if(notesBTN){
+        notesBTN.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tripId = e.target.parentNode.parentNode.parentNode.dataset.id;
+                const notes = modalForNotes(tripId);
+
+                console.log(notes)
+            })
+        })
+    }
+
     if(removeBTN){
         removeBTN.forEach(btn => {
             btn.addEventListener('click', (e)=> {
@@ -205,12 +261,14 @@ const updateUI = async (trips) => {
                         <div class="trip-notes-content">
                             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhgfvrnrugui4rbfbvrfueiu</p>
                         </div>
+                        
+                        
                     </div>
                 </div>
                 <div class="right-side">
                     <img id="my-trip-img" src="${trip.images.hits[0].largeImageURL}" alt="${trip.destination}">
                     <div class="right-trip-control">
-                        <button id="add-notes">Add notes</button>
+                        <button id="add-notes" type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter">Add notes</button>
                         <button id="save-trip">Save Trip</button>
                         <button id="delete-trip">Remove Trip</button>
                     </div>
@@ -240,7 +298,6 @@ const updateUI = async (trips) => {
 
 // User Trips Menu
 const userTrips = () => {
-    console.log("User menu works");
     let myTrips = getTripsList(); // Either [] or [{...}, {...}]
     document.querySelector("#trips-search").style.display = "none";
 
@@ -251,14 +308,11 @@ const userTrips = () => {
 document.querySelector(".my-trips-menu").addEventListener('click', _ => {
     _.preventDefault();
     userTrips();
-
-    
 });
 
 
 const mainPage = () => {
     let trips = storage;
-    console.log(trips)
     updateUI(trips);
     document.querySelector("#trips-search").style.display = "flex";
 }

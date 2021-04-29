@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <title>Zaggora - Travel PLanner</title>
 </head>
 <body>
@@ -37,8 +40,35 @@
                             <div class="trip-notes">
                                 <p class="trip-notes-heading">Notes: </p>
                                 <div class="trip-notes-content">
-                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhgfvrnrugui4rbfbvrfueiu</p>
+                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhg fvrnrugui4rbfbvrfueiu</p>
                                 </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content ">
+                                            <div class="modal-header ">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Write a note</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="notes-form">
+                                                    <div class="form-group " >
+                                                        <!-- <label for="exampleFormControlTextarea1">Example textarea</label> -->
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1 notes-text-input" rows="3"></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" id="userNotesBtn" data-dismiss="modal">Add Note</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="right-side">
@@ -46,7 +76,7 @@
                             <div class="right-trip-control">
                                 <!-- <button id="add-lodging-info">Add lodging info</button>
                                 <button id="add-packing-info">Add packing info</button> -->
-                                <button id="add-notes">Add notes</button>
+                                <button id="add-notes" type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter">Add notes</button>
                                 <button id="save-trip">Save Trip</button>
                                 <button id="delete-trip">Remove Trip</button>
                             </div>
@@ -69,8 +99,8 @@
                     </form>
                 </div>
             </section>
-            <div id="modal">
-                <p class="modal--message"></p>
+            <div id="modalNotify">
+                <p class="modalNotify--message"></p>
             </div>
         </main>
     </div>
