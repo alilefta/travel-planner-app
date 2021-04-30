@@ -1,3 +1,5 @@
+import e from "express";
+
 let storage = [];
 
 const modal = (msg, type = 'success') => {
@@ -26,7 +28,6 @@ const modal = (msg, type = 'success') => {
 
 const searchedTripsData = (data) => {
     storage = [...data];
-    // console.log(storage)
     updateUI(storage);
     return storage;
 }
@@ -117,22 +118,43 @@ const checkweather = (weather, date) => {
     }
 }
 
-const searchAndAddNote = (note, id) => {
-    // const trips = getTripsList();
+const checkNotes = (trip) => {
+    let x = '';
+    if(trip.notes.length === 0){
+        x = `<p class="noNotesFound">No trip notes ... </p>`
+    }else{
+        x = `<p class="waitingForNotes">Wait for notes ... </p>`
+    }
 
-    // trips.map(e => {
-    //     if(e.id === id){
-    //         e["note"] = note;
-    //     }
-    // })
-
-    // console.log(trips)
+    return x;
 }
+
+const addNotes = (note, id) => {
+    const trips = getTripsList();    
+    trips.map(e => {
+        if(e.id === id){
+            if(note !== ''){
+                modal("Note added", "success");
+                return e.notes.push(note);
+            }
+        }
+    });
+    localStorage.setItem("trips-app-planner", JSON.stringify(trips));
+
+    storage.map(trip => {
+        if(trip.id === id){
+            if(note !== ''){
+                modal("Note added", "success");
+                return trip.notes.push(note);
+            }
+        }
+    })
+    console.log(storage)
+}
+
 const modalForNotes =(dataId) => {
     const trip = document.querySelector(`[data-id='${dataId}']`);
     const notesContainer = trip.querySelector('.trip-notes');
-
-    console.log(trip)
     const div = document.createElement('div');
     div.innerHTML = `<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                 aria-hidden="true">
@@ -165,7 +187,9 @@ const modalForNotes =(dataId) => {
     btn.addEventListener('click', () => {
         const txt = trip.querySelector('.notes-text-input');
 
-        searchAndAddNote(txt.value, dataId);
+        addNotes(txt.value, dataId);
+
+        loadNotes();
         
         txt.value = '';
         return txt.value
@@ -195,10 +219,10 @@ const handleTripControl = (trip) => {
     if(notesBTN){
         notesBTN.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const tripId = e.target.parentNode.parentNode.parentNode.dataset.id;
-                const notes = modalForNotes(tripId);
-
-                console.log(notes)
+                let tripId = e.target.parentNode.parentNode.parentNode.dataset.id;
+                if(tripId === trip.id){
+                    modalForNotes(tripId);
+                }
             })
         })
     }
@@ -242,6 +266,7 @@ const updateUI = async (trips) => {
 
     if(trips.length !== 0){
         trips.map(trip => {
+            console.log(trip)
             let countdownDate = countDown(trip.date);
             const div = document.createElement('div');
             const removeNoTripsAvaliable = document.querySelector(".no-trip-info");
@@ -259,10 +284,8 @@ const updateUI = async (trips) => {
                     <div class="trip-notes">
                         <p class="trip-notes-heading">Notes: </p>
                         <div class="trip-notes-content">
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhgfvrnrugui4rbfbvrfueiu</p>
+                            ${checkNotes(trip)}
                         </div>
-                        
-                        
                     </div>
                 </div>
                 <div class="right-side">
@@ -276,8 +299,8 @@ const updateUI = async (trips) => {
             tripContainer.appendChild(div);
 
             handleTripControl(trip, trip.id); //Run Buttons => save, remove, add notes
-        })
-
+            loadNotes();
+        });
     }
     
     else{
@@ -295,6 +318,95 @@ const updateUI = async (trips) => {
 
 }
 
+const loadNotes = () => {
+    const tripsDOM = document.querySelectorAll('.my-trip');
+
+    if(tripsDOM.length !== 0){
+
+        tripsDOM.forEach(tripEl => {
+            const tripsStore = getTripsList();
+
+            tripsStore.map(trip => {
+                if(trip.id === tripEl.dataset.id){
+                    
+                    if(trip.notes.length !== 0){
+                        if(tripEl.querySelector('.noNotesFound')){
+                            tripEl.querySelector('.noNotesFound').remove();
+                        }
+                        if(tripEl.querySelector('.waitingForNotes')){
+                            tripEl.querySelector('.waitingForNotes').remove();
+                        }
+                    }
+                    const container = tripEl.querySelector('.trip-notes-content');
+
+                    trip.notes.map(note => {
+                        const p = document.createElement('p');
+                        p.classList.add('note-content-p');
+
+                        p.innerText = note;
+
+                        const a = document.createElement('a');
+    
+                        a.classList.add('removeNote');
+                        a.href = "#";
+                        a.innerText = 'X';
+    
+                        p.appendChild(a);
+    
+                        container.appendChild(p);
+                    });
+                }
+            });
+        });
+        removeNoteBTN();
+    }
+}
+
+// class Notes {
+//     removeNotes = () => {
+
+//     }
+// }
+
+const removeNoteBTN = () => {
+    let trips = getTripsList();
+    const removeBTNs = document.querySelectorAll('.removeNote');
+    removeBTNs.forEach(btn => 
+        btn.addEventListener('click', _=> {
+        _.preventDefault();
+
+        trips.map(trip => {
+            if(trip.notes.length !== 0){
+                return trip.notes = trip.notes.filter(note => {
+                    if(_.target.parentNode.firstChild.data !== note){
+                        return note;
+                    }
+                })
+            }
+        })
+        
+        localStorage.setItem("trips-app-planner", JSON.stringify(trips));
+        
+
+
+        storage.map(trip => {
+            if(trip.notes.length !== 0){
+                return trip.notes = trip.notes.filter(note => {
+                    if(_.target.parentNode.firstChild.data !== note){
+                        return note;
+                    }
+                })
+            }else{
+                
+            }
+            // checkNotes(trip);
+            
+        });
+        modal('Note is removed', 'warning');
+        searchedTripsData(storage);
+        return storage;
+    }));
+}
 
 // User Trips Menu
 const userTrips = () => {
@@ -331,7 +443,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
     if(storage.length === 0){
         storage = [];
     }
-    // updateUI(storage);
+    updateUI(storage);
 });
 
 export {

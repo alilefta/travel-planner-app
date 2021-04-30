@@ -42,33 +42,6 @@
                                 <div class="trip-notes-content">
                                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.fndviorhiogrhhvioroghrhg fvrnrugui4rbfbvrfueiu</p>
                                 </div>
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content ">
-                                            <div class="modal-header ">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">Write a note</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form id="notes-form">
-                                                    <div class="form-group " >
-                                                        <!-- <label for="exampleFormControlTextarea1">Example textarea</label> -->
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1 notes-text-input" rows="3"></textarea>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary" id="userNotesBtn" data-dismiss="modal">Add Note</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                         <div class="right-side">
@@ -94,6 +67,10 @@
                         <label for="departure-date">
                             <input id="trips-form-date" type="date" required>
                             Departure:
+                        </label>
+                        <label for="end-date">
+                            <input id="trips-form-date-end" type="date">
+                            End date:
                         </label>
                         <button role="submit" type="submit" id="trips-form-btn">Go</button>
                     </form>

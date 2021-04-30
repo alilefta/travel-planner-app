@@ -115,11 +115,13 @@ const pixabayAPICall = async (query) => {
     return response;
 }
 
-const fetchAllAPs = async (dest, date)=> {
+const fetchAllAPs = async (dest, date, endDate)=> {
     const trip = {
         id: new Date().getTime().toString(),
         destination: dest,
-        date: date
+        date: date,
+        endDate: endDate,
+        notes: []
     };
     let isNull = false;
     await geoNamesApi(dest).then(async locationInfo => {
