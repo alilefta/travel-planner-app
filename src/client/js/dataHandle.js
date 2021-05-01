@@ -196,7 +196,7 @@ const modalForNotes =(dataId) => {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary userNotesBtn"  data-dismiss="modal">Add Note</button>
+                        <button type="button" class="btn userNotesBtn"  data-dismiss="modal">Add Note</button>
                     </div>
                 </div>
             </div>
