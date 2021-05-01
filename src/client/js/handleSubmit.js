@@ -10,10 +10,10 @@ const handleSubmit = () => {
 
             const destination = document.querySelector("#trips-form-destination");
             const date = document.querySelector("#trips-form-date");
-            const endDate = document.querySelector("#trip-form-date-end");
+            const endDate = document.querySelector("#trips-form-date-end");
 
             if(destination.value !== "" && date.value !== ""){
-                fetchAllAPs(destination.value, date.value, endDate).then(async data => {
+                fetchAllAPs(destination.value, date.value, endDate.value).then(async data => {
                     
                     if(data !== null){
                         storage.push(data);
@@ -30,6 +30,7 @@ const handleSubmit = () => {
 
                 destination.value = '';
                 date.value = '';
+                endDate.value = '';
             }
         })
     }
