@@ -12,7 +12,7 @@ https://angry-almeida-1e29f6.netlify.app/
 
 ## Features
 
-1. User can search for a trip with `city name and departure date` and optionally end date.
+1. User can search for a trip with `city name and departure date` and optionally `end date`.
 2. User can save or remove the trip from the search main page
 3. Local storage is used to Save trips and Notes which they are much like Todo list.
 4. User can add Notes, with a nice bootstrap modal => note will added to the trip and rendered immediatly.
