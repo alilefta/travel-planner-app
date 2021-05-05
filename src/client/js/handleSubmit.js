@@ -1,6 +1,7 @@
 import {fetchAllAPs} from './fetchAPIs'
 import{searchedTripsData, storage, modal} from './dataHandle';
 
+// Handle search form and collect data to send them to Data handle file
 const handleSubmit = () => {
     const tripsForm = document.querySelector("#trips-form");
 

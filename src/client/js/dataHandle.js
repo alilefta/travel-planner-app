@@ -1,5 +1,29 @@
 let storage = [];
 
+const exchangeData = (data = null) => {
+    let storageMigrated = [];
+    if(data !== null){
+        storageMigrated = [...data];
+        fetch('http://localhost:8081/trips', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(storageMigrated)
+        }).then(data => data.json()).then(data => console.log(data))
+        .catch(err => {
+            throw new Error(err);
+        })
+    }else{
+        fetch('http://localhost:8081/trips').then(data => data.json()).then(data => console.log(data))
+        .catch(err => {
+            throw new Error(err);
+        })
+    }
+    return storageMigrated.length > 0 ? storageMigrated: storage;
+}
+
+//Add modal notifications on user interaction with the page
 const modal = (msg, type = 'success') => {
     const modal = document.querySelector("#modalNotify");
     const messageEl = document.querySelector(".modalNotify--message");
@@ -28,6 +52,7 @@ const modal = (msg, type = 'success') => {
     return msg;
 } 
 
+//Submitted data by form is added to global data storage, which then update the page on every change happens
 const searchedTripsData = (data) => {
     storage = [...data];
     storage = storage.reduce((unique, currentValue) => {
@@ -36,10 +61,12 @@ const searchedTripsData = (data) => {
         }
         return unique;
     },[]);
+    exchangeData(storage);
     updateUI(storage);
     return storage;
 }
 
+// Get data from LocalStorage
 const getTripsList = () => {
     let tripsList;
     if(localStorage.getItem('trips-app-planner') === null ){
@@ -50,7 +77,7 @@ const getTripsList = () => {
     return tripsList;
 }
 
-
+// Remove trip from localStorage and global storage by an ID
 const removeTrip = (id) => {
     let trips = getTripsList();
 
@@ -71,7 +98,7 @@ const removeTrip = (id) => {
     
     return storage;
 }
-
+// Save the trip to both LocalStorage and global storage
 const saveTrip = (trip) => {
     let str = getTripsList();
 
@@ -94,7 +121,7 @@ const saveTrip = (trip) => {
 
 }
 
-
+// Count down timer to calculate days between departure date and current date
 const countDown = (date) => {
     let countDownDate = new Date(date).getTime();
     let now = new Date().getTime();
@@ -106,7 +133,7 @@ const countDown = (date) => {
         return days;
     }
 }
-
+// Check if the date provided by user is within 7 days of weather API data
 const checkweather = (weather, date) => {
     if(countDown(date) <= 7){
         let x = `<div class="trip-weather">
@@ -127,6 +154,7 @@ const checkweather = (weather, date) => {
     }
 }
 
+// Check if trip has notes, Show them instantly, otherwise show a message to tell "No notes"  
 const checkNotes = (trip) => {
     let x = '';
     if(trip.notes.length === 0){
@@ -145,6 +173,7 @@ const checkNotes = (trip) => {
     return x;
 }
 
+// Add notes to trip by using unique ID to all of trip and note
 const addNotes = (note, id) => {
     const trips = getTripsList();    
     trips.map(e => {
@@ -172,6 +201,7 @@ const addNotes = (note, id) => {
     return storage;
 }
 
+// Rendering a form to show up to the user, used to get a note input
 const modalForNotes =(dataId) => {
     const trip = document.querySelector(`[data-id='${dataId}']`);
     if(trip){
@@ -221,6 +251,7 @@ const modalForNotes =(dataId) => {
     }
 }
 
+// Handle save, remove and add notes events of each trip
 const handleTripControl = (trip) => {
     let saveBTN = document.querySelectorAll("#save-trip");
     let removeBTN = document.querySelectorAll("#delete-trip");
@@ -237,7 +268,7 @@ const handleTripControl = (trip) => {
                 }
 
                 return storage;
-            })
+            });
         });
     }
 
@@ -249,21 +280,22 @@ const handleTripControl = (trip) => {
                     modalForNotes(tripId);
                 }
             })
-        })
+        });
     }
 
     if(removeBTN){
         removeBTN.forEach(btn => {
             btn.addEventListener('click', (e)=> {
-                let dataID = e.target.parentNode.parentNode.parentNode.dataset.id;
+                let dataID = e.target.parentNode.parentNode.parentNode.dataset.id; 
                 if(dataID === trip.id){
                     removeTrip(trip.id);
                 }
-            })
-        })
+            });
+        });
     }
 }
 
+// Calculate length of a trip by calculating days between first date and last one
 const checkDates = (trip) => {
     let date1 = new Date(trip.date);
     let date2 = new Date(trip.endDate);
@@ -271,6 +303,9 @@ const checkDates = (trip) => {
     var differenceInDays = differenceInTime / (1000 * 3600 * 24);
     return differenceInDays;
 }
+
+// If a user provide a second date, show a DOM element to tell how many days a trip will take
+// Otherwise show DOM element to tell if no end date was provided
 const lengthOfTrip = (trip) => {
     let x = '';
     if(trip.endDate !== ''){
@@ -282,6 +317,7 @@ const lengthOfTrip = (trip) => {
 }
 
 
+// Show a DOM element of the trip, its weather, image, notes and other info
 const updateUI = async (trips) => {
     const tripContainer = document.querySelector('.trips-gallery');
 
@@ -362,10 +398,9 @@ const updateUI = async (trips) => {
     }else{
         return null;
     }
-
-
 }
 
+// Rendering Notes as a DOM element
 const loadNotes = () => {
     const tripsDOM = document.querySelectorAll('.my-trip');
 
@@ -412,6 +447,7 @@ const loadNotes = () => {
     }
 }
 
+// Handling click on remove button, to remove a note from the storage
 const removeNoteBTN = () => {
     let trips = getTripsList();
     const removeBTNs = document.querySelectorAll('.removeNote');
@@ -450,6 +486,7 @@ const removeNoteBTN = () => {
     }));
 }
 
+// Handling the main navbar buttons
 const basicFunctionality = () => {
     // User Trips Menu
     const userTrips = () => {
@@ -484,10 +521,11 @@ const basicFunctionality = () => {
     }
 }
 
-
+// Invoking the navbar interactions function 
 basicFunctionality();
 
 
+// Automatically load trips when DOM is painted
 document.addEventListener("DOMContentLoaded", ()=> {
     let storageSavedItems = getTripsList();
     
