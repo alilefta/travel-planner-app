@@ -10,12 +10,12 @@ const exchangeData = (data = null) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(storageMigrated)
-        }).then(data => data.json()).then(data => console.log(data))
+        }).then(data => data.json()).then(data => data)
         .catch(err => {
             throw new Error(err);
         })
     }else{
-        fetch('http://localhost:8081/trips').then(data => data.json()).then(data => console.log(data))
+        fetch('http://localhost:8081/trips').then(data => data.json()).then(data => data)
         .catch(err => {
             throw new Error(err);
         })
