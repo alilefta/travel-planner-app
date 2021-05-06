@@ -6,10 +6,6 @@ App is build using SASS, express, Webpack, ES6.
 Unit tested with Jest.
 Service workers included.
 
-## Demo
-
-https://angry-almeida-1e29f6.netlify.app/
-
 ## Features
 
 1. User can search for a trip with `city name and departure date` and optionally `end date`.
